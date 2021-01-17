@@ -1,39 +1,82 @@
-const numberContainer = document.querySelector('.numbers');
-const operationContainer = document.querySelector('.operations');
-const result = document.querySelector('.result');
-const equal = document.querySelector('.equal');
+class Calculator {
+  constructor(previousOperandEl, currentOperandEl) {
+    this.previousOperandEl = previousOperandEl;
+    this.currentOperandEl = currentOperandEl;
+    this.clear();
+  }
+  clear() {
+    this.previousOperand = '';
+    this.currentOperand = '';
+    this.operator = undefined;
+  }
+  append(value) {
+    if (!this.currentOperand) this.currentOperand = value;
+    else this.currentOperand += value;
+  }
+  updateDisplay() {
+    if (!this.previousOperand) this.previousOperandEl.innerText = '';
+    else this.previousOperandEl.innerText = this.previousOperand + this.operand;
+    this.currentOperandEl.innerText = this.currentOperand;
+  }
+  chooseOperation(operand) {
+    this.operand = operand;
+    this.currentOperandEl.innerText += this.operand;
+    this.previousOperand = this.currentOperand;
+    this.currentOperand = '';
+    this.updateDisplay();
+  }
 
-let query = '';
+  performOperation() {
+    if (!this.operand) return;
 
-const createQuery = function (e) {
-  const clicked = e.target;
+    const num1 = Number(this.previousOperand);
+    const num2 = Number(this.currentOperand);
+    this.previousOperandEl.innerText = '';
+    if (this.operand === '+') {
+      this.currentOperandEl.innerText = num1 + num2;
+    }
+    if (this.operand === '-') {
+      this.currentOperandEl.innerText = num1 - num2;
+    }
+    if (this.operand === '*') {
+      this.currentOperandEl.innerText = num1 * num2;
+    }
+    if (this.operand === '÷') {
+      this.currentOperandEl.innerText = num1 / num2;
+    }
+  }
+}
 
-  if (!clicked.classList.contains('num')) return;
+const previousOperandEl = document.querySelector('.previous-operand');
+const currentOperandEl = document.querySelector('.current-operand');
+const allNumbers = document.querySelectorAll('[data-number]');
+const allOperators = document.querySelectorAll('[data-operator]');
+const equalBtn = document.querySelector('[data-equal]');
+const deleteBtn = document.querySelector('[data-delete]');
+const allClearBtn = document.querySelector('[data-all-clear]');
 
-  query += clicked.value;
-  result.value = query;
-};
+const calculator = new Calculator(previousOperandEl, currentOperandEl);
 
-const validateNumber = (n) => {
-  const num = parseFloat(n);
-  return !Number.isNaN(num) && Number.isFinite(num) && Number(n) == n;
-};
-
-const calc = function (operand, num1, num2) {
-  console.log(operand, num1, num2);
-};
-
-equal.addEventListener('click', function () {
-  query.split('').forEach((el, i, arr) => {
-    if (validateNumber(el)) return;
-    console.log(el);
-
-    calc(el, Number(arr[i - 1]), Number(arr[1 + 1]));
+allNumbers.forEach((num) => {
+  num.addEventListener('click', function (e) {
+    const value = e.target.innerText;
+    calculator.append(value);
+    calculator.updateDisplay(value);
   });
 });
 
-// const num = parseFloat(n);
-// return !Number.isNaN(num) && Number.isFinite(num) && Number(n) == n;
+allOperators.forEach((operand) => {
+  operand.addEventListener('click', function (e) {
+    const value = e.target.innerText;
+    calculator.chooseOperation(value);
+  });
+});
 
-numberContainer.addEventListener('click', createQuery);
-operationContainer.addEventListener('click', createQuery);
+equalBtn.addEventListener('click', function () {
+  calculator.performOperation();
+});
+
+allClearBtn.addEventListener('click', function () {
+  calculator.clear();
+  calculator.updateDisplay();
+});
