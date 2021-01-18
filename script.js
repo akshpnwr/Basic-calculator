@@ -32,7 +32,7 @@ class Calculator {
     this._currentOperand = '';
   }
 
-  performOperation() {
+  performOperation(e = undefined) {
     if (!this._operand) return;
 
     if (!this._currentOperand || !this._previousOperand) return;
@@ -55,8 +55,16 @@ class Calculator {
     }
     this._currentOperand = result;
     this._previousOperand = '';
+
+    if (result !== 69 || e !== equalBtn) return;
+
+    surprisePopup();
   }
 }
+
+////////////
+// Elements
+////////////
 
 const previousOperandEl = document.querySelector('.previous-operand');
 const currentOperandEl = document.querySelector('.current-operand');
@@ -65,9 +73,15 @@ const allOperators = document.querySelectorAll('[data-operator]');
 const equalBtn = document.querySelector('[data-equal]');
 const deleteBtn = document.querySelector('[data-delete]');
 const allClearBtn = document.querySelector('[data-all-clear]');
-
+const overlay = document.querySelector('.overlay');
+const surprise = document.querySelector('.surprise');
+const closeSurpriseBtn = document.querySelector('.close-surprise');
+// Instance of the class
 const calculator = new Calculator(previousOperandEl, currentOperandEl);
 
+// Event handlers
+
+//For All Numbers
 allNumbers.forEach((num) => {
   num.addEventListener('click', function (e) {
     const value = e.target.innerText;
@@ -76,6 +90,7 @@ allNumbers.forEach((num) => {
   });
 });
 
+//For All Operations
 allOperators.forEach((operand) => {
   operand.addEventListener('click', function (e) {
     const value = e.target.innerText;
@@ -85,17 +100,40 @@ allOperators.forEach((operand) => {
   });
 });
 
+//For Equal Button
 equalBtn.addEventListener('click', function () {
-  calculator.performOperation();
+  calculator.performOperation(this);
   calculator.updateDisplay();
 });
 
+//For Clear Button
 allClearBtn.addEventListener('click', function () {
   calculator.clear();
   calculator.updateDisplay();
 });
 
+//For Delete Button
 deleteBtn.addEventListener('click', function () {
   calculator.delete();
   calculator.updateDisplay();
 });
+
+///////////////////////
+// Surprise Element 💋
+///////////////////////
+
+const surprisePopup = function () {
+  surprise.classList.toggle('hidden');
+  overlay.classList.toggle('hidden');
+  closeSurpriseBtn.classList.toggle('hidden');
+};
+
+overlay.addEventListener('click', surprisePopup);
+document.addEventListener('keydown', function (e) {
+  if (overlay.classList.contains('hidden')) return;
+
+  if (e.key !== 'Escape') return;
+  surprisePopup();
+});
+
+closeSurpriseBtn.addEventListener('click', surprisePopup);
