@@ -77,12 +77,17 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  max-width: 100%;
+  border: 1px solid black;
+  height: 500px;
+  width: 60%;
+  min-height: 500px;
+  min-width: 400px;
 }
 .surprise img {
-  min-width: 600px;
-  min-height: 500px;
   width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
 .close-surprise {
