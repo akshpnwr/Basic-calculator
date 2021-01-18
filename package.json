@@ -1,0 +1,23 @@
+{
+  "name": "calculator",
+  "version": "1.0.0",
+  "description": "not so basic calculator",
+  "default": "index.html",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html --dist-dir ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akshpnwr/Basic-calculator.git"
+  },
+  "author": "akash",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akshpnwr/Basic-calculator/issues"
+  },
+  "homepage": "https://github.com/akshpnwr/Basic-calculator#readme",
+  "dependencies": {
+    "parcel": "^2.0.0-beta.1"
+  }
+}
