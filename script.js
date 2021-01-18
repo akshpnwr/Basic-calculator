@@ -5,45 +5,56 @@ class Calculator {
     this.clear();
   }
   clear() {
-    this.previousOperand = '';
-    this.currentOperand = '';
-    this.operator = undefined;
+    this._previousOperand = '';
+    this._currentOperand = '';
+    this._operator = undefined;
   }
+
   append(value) {
-    if (!this.currentOperand) this.currentOperand = value;
-    else this.currentOperand += value;
+    if (!this._currentOperand) this._currentOperand = value;
+    else this._currentOperand += value;
+  }
+
+  delete() {
+    this._currentOperand = '';
   }
   updateDisplay() {
-    if (!this.previousOperand) this.previousOperandEl.innerText = '';
-    else this.previousOperandEl.innerText = this.previousOperand + this.operand;
-    this.currentOperandEl.innerText = this.currentOperand;
+    if (!this._previousOperand) this.previousOperandEl.innerText = '';
+    else
+      this.previousOperandEl.innerText = this._previousOperand + this._operand;
+    this.currentOperandEl.innerText = this._currentOperand;
   }
   chooseOperation(operand) {
-    this.operand = operand;
-    this.currentOperandEl.innerText += this.operand;
-    this.previousOperand = this.currentOperand;
-    this.currentOperand = '';
-    this.updateDisplay();
+    this.performOperation();
+    this._operand = operand;
+    this.currentOperandEl.innerText += this._operand;
+    this._previousOperand = this._currentOperand;
+    this._currentOperand = '';
   }
 
   performOperation() {
-    if (!this.operand) return;
+    if (!this._operand) return;
 
-    const num1 = Number(this.previousOperand);
-    const num2 = Number(this.currentOperand);
-    this.previousOperandEl.innerText = '';
-    if (this.operand === '+') {
-      this.currentOperandEl.innerText = num1 + num2;
+    if (!this._currentOperand || !this._previousOperand) return;
+
+    const num1 = Number(this._previousOperand);
+    const num2 = Number(this._currentOperand);
+
+    let result;
+    if (this._operand === '+') {
+      result = num1 + num2;
     }
-    if (this.operand === '-') {
-      this.currentOperandEl.innerText = num1 - num2;
+    if (this._operand === '-') {
+      result = num1 - num2;
     }
-    if (this.operand === '*') {
-      this.currentOperandEl.innerText = num1 * num2;
+    if (this._operand === '*') {
+      result = num1 * num2;
     }
-    if (this.operand === '÷') {
-      this.currentOperandEl.innerText = num1 / num2;
+    if (this._operand === '÷') {
+      result = num1 / num2;
     }
+    this._currentOperand = result;
+    this._previousOperand = '';
   }
 }
 
@@ -61,22 +72,30 @@ allNumbers.forEach((num) => {
   num.addEventListener('click', function (e) {
     const value = e.target.innerText;
     calculator.append(value);
-    calculator.updateDisplay(value);
+    calculator.updateDisplay();
   });
 });
 
 allOperators.forEach((operand) => {
   operand.addEventListener('click', function (e) {
     const value = e.target.innerText;
+
     calculator.chooseOperation(value);
+    calculator.updateDisplay();
   });
 });
 
 equalBtn.addEventListener('click', function () {
   calculator.performOperation();
+  calculator.updateDisplay();
 });
 
 allClearBtn.addEventListener('click', function () {
   calculator.clear();
+  calculator.updateDisplay();
+});
+
+deleteBtn.addEventListener('click', function () {
+  calculator.delete();
   calculator.updateDisplay();
 });
