@@ -18,11 +18,20 @@ class Calculator {
   delete() {
     this._currentOperand = '';
   }
+
+  _formatNumber(num) {
+    if (typeof num === 'number') return num;
+
+    return num.includes('.') ? num : new Intl.NumberFormat('hi-IN').format(num);
+  }
+
   updateDisplay() {
     if (!this._previousOperand) this.previousOperandEl.innerText = '';
-    else
-      this.previousOperandEl.innerText = this._previousOperand + this._operand;
-    this.currentOperandEl.innerText = this._currentOperand;
+    else {
+      this.previousOperandEl.innerText =
+        this._formatNumber(this._previousOperand) + this._operand;
+    }
+    this.currentOperandEl.innerText = this._formatNumber(this._currentOperand);
   }
   chooseOperation(operand) {
     this.performOperation();
@@ -90,7 +99,7 @@ allNumbers.forEach((num) => {
   });
 });
 
-//For All Operations
+//For All Operators
 allOperators.forEach((operand) => {
   operand.addEventListener('click', function (e) {
     const value = e.target.innerText;
@@ -137,3 +146,6 @@ document.addEventListener('keydown', function (e) {
 });
 
 closeSurpriseBtn.addEventListener('click', surprisePopup);
+
+///////////
+//////
